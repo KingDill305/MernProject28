@@ -9,6 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api', require('./routes/clubs'));
+app.use('/api', require('./routes/events'));
 // Third argument forces the collection names to match your Compass screenshot
 const User = mongoose.model('User', new mongoose.Schema({
   FirstName: String,
