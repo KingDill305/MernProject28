@@ -43,8 +43,11 @@ export default function Register() {
 
   if (sentTo) {
     return (
-      <AuthLayout title="Account created" intro="You’re all set. Log in with the username and password you just chose.">
+      <AuthLayout title="Check your email" intro={`We sent a verification link to ${sentTo}. Open it to activate your account, then log in.`}>
         <p className="auth-switch"><Link className="btn btn-primary" to="/login" state={{ from }}>Go to log in</Link></p>
+        <p className="auth-links">
+          Didn’t get it? <ResendLink email={sentTo} />
+        </p>
       </AuthLayout>
     );
   }
