@@ -20,7 +20,7 @@ export default function EventTile({ ev, level = 3 }) {
         <span className="tile-where">{ev.Location || 'Location to be announced'}</span>
         <span className="tile-row">
           {ev.MyStatus && <span className={`pill pill-${ev.MyStatus}`}>{STATUS_LABEL[ev.MyStatus]}</span>}
-          <span className="tile-count">{ev.GoingCount} going</span>
+          <span className="tile-count">{ev.GoingCount ?? 0} going</span>
         </span>
       </div>
     </Link>

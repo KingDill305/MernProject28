@@ -95,7 +95,7 @@ export default function EventPage() {
           </div>
 
           <aside className="event-side">
-            <RsvpBox ev={ev} onChange={(updated, msg) => { setEv(updated); setNotice(msg); }} />
+            <RsvpBox ev={ev} onChange={async (msg) => { await load(); setNotice(msg); }} />
             <GuestList guests={ev.Guests} counts={ev.Counts} />
           </aside>
         </div>
@@ -144,9 +144,9 @@ function RsvpBox({ ev, onChange }) {
     setBusy(true);
     setError('');
     try {
-      const updated = await api.rsvp(ev.Code, user.id, status, status === 'no' ? 0 : extra);
+      await api.rsvp(ev.Code, user.id, status, status === 'no' ? 0 : extra);
       const label = CHOICES.find((c) => c.id === status).label;
-      onChange(updated, `RSVP saved: ${label}.`);
+      await onChange(`RSVP saved: ${label}.`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -223,8 +223,9 @@ function Comments({ code, cancelled }) {
     setBusy(true);
     setError('');
     try {
-      const c = await api.addComment(code, user.id, text.trim());
-      setComments((cs) => [...cs, c]);
+      await api.addComment(code, user.id, text.trim());
+      const fresh = await api.listComments(code);
+      setComments(Array.isArray(fresh) ? fresh : []);
       setText('');
     } catch (err) {
       setError(err.message);

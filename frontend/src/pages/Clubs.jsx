@@ -31,8 +31,8 @@ export default function Clubs() {
   async function join(club) {
     setBusyId(club._id);
     try {
-      const updated = await api.joinClub(club._id, user.id);
-      setClubs((cs) => cs.map((c) => (c._id === club._id ? { ...c, ...updated } : c)));
+      await api.joinClub(club._id, user.id);
+      setClubs((cs) => cs.map((c) => (c._id === club._id ? { ...c, MyRole: 'member', MemberCount: (c.MemberCount || 0) + 1 } : c)));
       setNotice(`Joined ${club.Name}.`);
     } catch (err) {
       setNotice(err.message);

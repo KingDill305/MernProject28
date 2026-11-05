@@ -40,7 +40,7 @@ export default function ClubEditor() {
     try {
       const fields = { ...form, Name: form.Name.trim(), Description: form.Description.trim() };
       const club = editing ? await api.updateClub(id, user.id, fields) : await api.createClub(user.id, fields);
-      navigate(`/clubs/${club._id || id}`, { state: { flash: editing ? 'Club updated.' : 'Club created. You’re its first officer.' } });
+      navigate(`/clubs/${club._id || club.id || id}`, { state: { flash: editing ? 'Club updated.' : 'Club created. You’re its first officer.' } });
     } catch (err) {
       setError(err.message);
       setBusy(false);

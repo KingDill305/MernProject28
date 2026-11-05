@@ -92,7 +92,7 @@ export default function ClubPage() {
             <h2 id="club-events" className="section-title">Upcoming events</h2>
             {club.Events.length === 0
               ? <p className="muted">{officer ? 'Nothing scheduled. Post the club’s next event so members can RSVP.' : 'Nothing scheduled yet.'}</p>
-              : <EventGrid events={club.Events} />}
+              : <EventGrid events={club.Events.map((e) => ({ ClubName: club.Name, ClubId: club._id, ...e }))} />}
           </section>
 
           <aside className="panel" aria-labelledby="club-members">
