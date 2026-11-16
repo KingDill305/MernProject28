@@ -122,6 +122,23 @@ app.get('/api/verify-email', async (req, res) => {
   }
 });
 
+app.post('/api/verify-email', async (req, res) => {
+  try {
+    const { token } = req.body || {};
+    if (!token) return res.status(400).json({ error: 'token is required' });
+    const user = await User.findOne({ VerifyToken: token, VerifyExpires: { $gt: new Date() } });
+    if (!user) return res.status(400).json({ error: 'Link is invalid or has expired' });
+    user.Verified = true;
+    user.VerifyToken = undefined;
+    user.VerifyExpires = undefined;
+    await user.save();
+    res.json({ message: 'Email verified' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 app.post('/api/resend-verification', async (req, res) => {
   try {
     const email = String(req.body?.Email || '').trim().toLowerCase();
