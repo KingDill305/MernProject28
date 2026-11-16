@@ -8,9 +8,9 @@ the web app uses. Every call is async `fetch` with JSON bodies (`src/lib/api.js`
 1. Install **Expo Go** from the App Store / Play Store.
 2. Point the app at the deployed API: create `mobile/.env` with
    ```
-   EXPO_PUBLIC_API_URL=https://your-domain.com
+   EXPO_PUBLIC_API_URL=https://mern.lampkaushalpagadala.com
    ```
-   (no trailing slash; it must be the remote server, not localhost).
+   That is the deployed server. No trailing slash, and not localhost.
 3. ```bash
    cd mobile
    npm install
