@@ -62,40 +62,35 @@ const newToken = () => crypto.randomBytes(32).toString('hex');
 app.post('/api/register', async (req, res) => {
   try {
     const { FirstName, LastName, Login, Password, Email } = req.body || {};
-    if (!FirstName || !LastName || !Login || !Password)
-      return res.status(400).json({ error: 'FirstName, LastName, Login, and Password are required' });
+    const cleanEmail = String(Email || '').trim().toLowerCase();
+    if (!FirstName || !LastName || !Login || !Password || !cleanEmail)
+      return res.status(400).json({ error: 'FirstName, LastName, Email, Login, and Password are required' });
+    if (!/^\S+@\S+\.\S+$/.test(cleanEmail))
+      return res.status(400).json({ error: 'Enter a valid email address' });
 
     if (await User.findOne({ Login }))
       return res.status(409).json({ error: 'Login already exists' });
-
-    const cleanEmail = Email ? String(Email).trim().toLowerCase() : null;
-    if (cleanEmail && await User.findOne({ Email: cleanEmail }))
+    if (await User.findOne({ Email: cleanEmail }))
       return res.status(409).json({ error: 'Email already in use' });
 
-    const doc = { FirstName, LastName, Login, Password: await bcrypt.hash(Password, 10) };
-    let token = null;
-    if (cleanEmail) {
-      token = newToken();
-      Object.assign(doc, {
-        Email: cleanEmail,
-        Verified: false,
-        VerifyToken: token,
-        VerifyExpires: new Date(Date.now() + 24 * HOUR),
-      });
-    } else {
-      doc.Verified = true; // no email given, so nothing to verify
-    }
-
-    const user = await User.create(doc);
-    if (token) {
-      await sendMail(
-        cleanEmail,
-        'Verify your account',
-        `<p>Hi ${FirstName}, confirm your email:</p>
-         <p><a href="${APP_URL}/api/verify-email?token=${token}">Verify email</a></p>
-         <p>This link expires in 24 hours.</p>`
-      );
-    }
+    const token = newToken();
+    const user = await User.create({
+      FirstName,
+      LastName,
+      Login,
+      Password: await bcrypt.hash(Password, 10),
+      Email: cleanEmail,
+      Verified: false,
+      VerifyToken: token,
+      VerifyExpires: new Date(Date.now() + 24 * HOUR),
+    });
+    await sendMail(
+      cleanEmail,
+      'Verify your account',
+      `<p>Hi ${FirstName}, confirm your email:</p>
+       <p><a href="${APP_URL}/api/verify-email?token=${token}">Verify email</a></p>
+       <p>This link expires in 24 hours.</p>`
+    );
     res.status(201).json({ message: 'User registered successfully', id: user._id });
   } catch (err) {
     if (err.code === 11000)
