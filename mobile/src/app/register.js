@@ -79,8 +79,7 @@ export default function Register() {
         <Text style={[s.muted, { marginBottom: 16 }]}>Join clubs and RSVP to events on campus.</Text>
         <Field label="First name" value={form.FirstName} onChangeText={set('FirstName')} autoCapitalize="words" autoComplete="given-name" />
         <Field label="Last name" value={form.LastName} onChangeText={set('LastName')} autoCapitalize="words" autoComplete="family-name" />
-        <Field label="Email" value={form.Email} onChangeText={set('Email')} keyboardType="email-address" autoComplete="email"
-          hint="Add one to get a verification link, or leave it blank." />
+        <Field label="Email" value={form.Email} onChangeText={set('Email')} keyboardType="email-address" autoComplete="email" />
         <Field label="Username" value={form.Login} onChangeText={set('Login')} autoComplete="username" />
         <Field label="Password" value={form.Password} onChangeText={set('Password')} secureTextEntry autoComplete="new-password" hint="At least 8 characters." />
         <Field label="Confirm password" value={form.Confirm} onChangeText={set('Confirm')} secureTextEntry autoComplete="new-password" />
