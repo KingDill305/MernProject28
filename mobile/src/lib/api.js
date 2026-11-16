@@ -1,7 +1,7 @@
 // JSON client for the Express API. Same endpoints as frontend/src/api.js.
 // Set EXPO_PUBLIC_API_URL in mobile/.env to point at the deployed server,
 // e.g. EXPO_PUBLIC_API_URL=https://your-domain.com
-export const API_URL = (process.env.EXPO_PUBLIC_API_URL || 'https://kp-mern-api.duckdns.org').replace(/\/$/, '');
+export const API_URL = (process.env.EXPO_PUBLIC_API_URL || 'https://mern.lampkaushalpagadala.com').replace(/\/$/, '');
 
 async function request(path, { method = 'GET', body } = {}) {
   let res;
