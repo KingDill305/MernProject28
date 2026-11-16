@@ -8,7 +8,7 @@ const EMPTY = { FirstName: '', LastName: '', Email: '', Login: '', Password: '',
 
 function validate(f) {
   if (!f.FirstName.trim() || !f.LastName.trim()) return 'Enter your first and last name.';
-  if (!/^\S+@\S+\.\S+$/.test(f.Email.trim())) return 'Enter a valid email address.';
+  if (f.Email.trim() && !/^\S+@\S+\.\S+$/.test(f.Email.trim())) return 'Enter a valid email address, or leave it blank.';
   if (f.Login.trim().length < 3) return 'Usernames need at least 3 characters.';
   if (f.Password.length < 8) return 'Passwords need at least 8 characters.';
   if (f.Password !== f.Confirm) return 'The two passwords don’t match.';
@@ -35,7 +35,7 @@ export default function Register() {
       const email = body.Email.trim();
       await api.register({
         ...body, FirstName: body.FirstName.trim(), LastName: body.LastName.trim(), Login: body.Login.trim(),
-        Email: email,
+        Email: email || undefined, // blank email: account is active right away
       });
       setDone({ email });
     } catch (err) {
@@ -46,13 +46,21 @@ export default function Register() {
     }
   }
 
-  if (done) {
+  if (done && done.email) {
     return (
       <AuthLayout title="Check your email" intro={`We sent a verification link to ${done.email}. Open it to activate your account, then log in.`}>
         <p className="auth-switch"><Link className="btn btn-primary" to="/login" state={{ from }}>Go to log in</Link></p>
         <p className="auth-links">
           Didn’t get it? <ResendLink email={done.email} />
         </p>
+      </AuthLayout>
+    );
+  }
+
+  if (done) {
+    return (
+      <AuthLayout title="Account created" intro="You’re all set. Log in with the username and password you just chose.">
+        <p className="auth-switch"><Link className="btn btn-primary" to="/login" state={{ from }}>Go to log in</Link></p>
       </AuthLayout>
     );
   }
@@ -64,7 +72,7 @@ export default function Register() {
           <Field label="First name" name="FirstName" autoComplete="given-name" value={form.FirstName} onChange={update} />
           <Field label="Last name" name="LastName" autoComplete="family-name" value={form.LastName} onChange={update} />
         </div>
-        <Field label="Email" name="Email" type="email" autoComplete="email" hint="We’ll send a link to verify your account."
+        <Field label="Email (optional)" name="Email" type="email" autoComplete="email" hint="Add one to get a verification link, or leave it blank for now."
           value={form.Email} onChange={update} />
         <Field label="Username" name="Login" autoComplete="username" value={form.Login} onChange={update} />
         <Field label="Password" name="Password" type="password" autoComplete="new-password" hint="At least 8 characters." value={form.Password} onChange={update} />
