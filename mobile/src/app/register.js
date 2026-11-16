@@ -9,7 +9,7 @@ const EMPTY = { FirstName: '', LastName: '', Email: '', Login: '', Password: '',
 // Same rules as the web sign-up form
 function validate(f) {
   if (!f.FirstName.trim() || !f.LastName.trim()) return 'Enter your first and last name.';
-  if (f.Email.trim() && !/^\S+@\S+\.\S+$/.test(f.Email.trim())) return 'Enter a valid email address, or leave it blank.';
+  if (!/^\S+@\S+\.\S+$/.test(f.Email.trim())) return 'Enter a valid email address.';
   if (f.Login.trim().length < 3) return 'Usernames need at least 3 characters.';
   if (f.Password.length < 8) return 'Passwords need at least 8 characters.';
   if (f.Password !== f.Confirm) return 'The two passwords don’t match.';
@@ -37,7 +37,7 @@ export default function Register() {
         LastName: form.LastName.trim(),
         Login: form.Login.trim(),
         Password: form.Password,
-        Email: email || undefined, // blank email: account is active right away
+        Email: email,
       });
       setDone({ email });
     } catch (err) {
@@ -60,15 +60,13 @@ export default function Register() {
   if (done) {
     return (
       <ScrollView style={s.screen} contentContainerStyle={s.pad}>
-        <Text style={s.h1}>{done.email ? 'Check your email' : 'Account created'}</Text>
+        <Text style={s.h1}>Check your email</Text>
         <Text style={[s.body, { marginBottom: 20 }]}>
-          {done.email
-            ? `We sent a verification link to ${done.email}. Open it to activate your account, then log in.`
-            : 'You’re all set. Log in with the username and password you just chose.'}
+          {`We sent a verification link to ${done.email}. Open it to activate your account, then log in.`}
         </Text>
         <Message error={error} info={info} />
         <Button title="Go to log in" onPress={() => router.back()} />
-        {done.email ? <Button title="Resend the email" kind="ghost" onPress={resend} style={{ marginTop: 10 }} /> : null}
+        <Button title="Resend the email" kind="ghost" onPress={resend} style={{ marginTop: 10 }} />
       </ScrollView>
     );
   }
@@ -79,8 +77,8 @@ export default function Register() {
         <Text style={[s.muted, { marginBottom: 16 }]}>Join clubs and RSVP to events on campus.</Text>
         <Field label="First name" value={form.FirstName} onChangeText={set('FirstName')} autoCapitalize="words" autoComplete="given-name" />
         <Field label="Last name" value={form.LastName} onChangeText={set('LastName')} autoCapitalize="words" autoComplete="family-name" />
-        <Field label="Email (optional)" value={form.Email} onChangeText={set('Email')} keyboardType="email-address" autoComplete="email"
-          hint="Add one to get a verification link, or leave it blank." />
+        <Field label="Email" value={form.Email} onChangeText={set('Email')} keyboardType="email-address" autoComplete="email"
+          hint="We’ll send a link to verify your account." />
         <Field label="Username" value={form.Login} onChangeText={set('Login')} autoComplete="username" />
         <Field label="Password" value={form.Password} onChangeText={set('Password')} secureTextEntry autoComplete="new-password" hint="At least 8 characters." />
         <Field label="Confirm password" value={form.Confirm} onChangeText={set('Confirm')} secureTextEntry autoComplete="new-password" />
