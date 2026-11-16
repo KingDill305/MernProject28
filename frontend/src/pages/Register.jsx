@@ -72,7 +72,7 @@ export default function Register() {
           <Field label="First name" name="FirstName" autoComplete="given-name" value={form.FirstName} onChange={update} />
           <Field label="Last name" name="LastName" autoComplete="family-name" value={form.LastName} onChange={update} />
         </div>
-        <Field label="Email (optional)" name="Email" type="email" autoComplete="email" hint="Add one to get a verification link, or leave it blank for now."
+        <Field label="Email" name="Email" type="email" autoComplete="email" hint="Add one to get a verification link, or leave it blank for now."
           value={form.Email} onChange={update} />
         <Field label="Username" name="Login" autoComplete="username" value={form.Login} onChange={update} />
         <Field label="Password" name="Password" type="password" autoComplete="new-password" hint="At least 8 characters." value={form.Password} onChange={update} />
