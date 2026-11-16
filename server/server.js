@@ -24,7 +24,7 @@ async function sendMail(to, subject, html) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Club Tracker <onboarding@resend.dev>',
+        from: process.env.EMAIL_FROM || 'Quad <onboarding@resend.dev>',
         to: [to],
         subject,
         html,
