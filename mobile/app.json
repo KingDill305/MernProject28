@@ -15,7 +15,8 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "package": "com.kingdill305.quad"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -23,6 +24,16 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "quad"
+    "scheme": "quad",
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "96f3ebaf-6803-4b56-ac9f-688b35cdf6f5"
+      }
+    }
   }
 }
